@@ -33,23 +33,23 @@ makegappsremovetxt(){
   for gapp in $gapps_list; do
     get_package_info "$gapp"
     if [ -n "$packagetarget" ]; then
-      gapps_remove="/system/$packagetarget$REMOVALSUFFIX
+      gapps_remove="/system/system/$packagetarget$REMOVALSUFFIX
 $gapps_remove"
     fi
     for lib in $packagelibs; do
       systemlibpath=""
       getpathsystemlib "$lib"
       for libpath in $systemlibpath; do
-        gapps_remove="/system/$libpath
+        gapps_remove="/system/system/$libpath
 $gapps_remove"
       done
     done
     for file in $packagefiles; do
-      gapps_remove="/system/$file
+      gapps_remove="/system/system/$file
 $gapps_remove"
     done
     for extraline in $packagegappsremove; do
-      gapps_remove="/system/$extraline
+      gapps_remove="/system/system/$extraline
 $gapps_remove"
     done
   done
@@ -710,21 +710,11 @@ nogooglewebview_removal_msg="NOTE: The Stock/AOSP WebView is not available on yo
 # _____________________________________________________________________________________________________________________
 #                      Detect A/B partition layout https://source.android.com/devices/tech/ota/ab_updates
 #                      and system-as-root https://source.android.com/devices/bootloader/system-as-root
-if [ -n "$(cat /proc/cmdline | grep slot_suffix)" ];
-then
+
+  ui_print "- SYSTEM_AS_ROOT DEVICE FORCED";
   device_abpartition=true
   SYSTEM=/system/system
   VENDOR=/vendor/vendor
-elif [ -n "$(cat /proc/mounts | grep /system_root)" ];
-then
-  device_abpartition=true
-  SYSTEM=/system_root/system
-  VENDOR=/vendor
-else
-  device_abpartition=false
-  SYSTEM=/system
-  VENDOR=/vendor
-fi
 
 # _____________________________________________________________________________________________________________________
 #                                                  Declare Variables
@@ -1182,6 +1172,9 @@ gapps_type=$(get_file_prop "$TMP/g.prop" "ro.addon.open_type")
 # _____________________________________________________________________________________________________________________
 #                                                  Begin GApps Installation
 ui_print " ";
+ui_print "KELSI'S Unnoficial GAPPS";
+ui_print " ";
+ui_print " ";
 ui_print '##############################';
 ui_print '  _____   _____   ___   ____  ';
 ui_print ' /  _  \ |  __ \ / _ \ |  _ \ ';
@@ -1376,7 +1369,7 @@ case "$device_architecture" in
   *x86_64*) arch="x86_64"; libfolder="lib64";;
   *x86*) arch="x86"; libfolder="lib";;
   *arm64*) arch="arm64"; libfolder="lib64";;
-  *armeabi*) arch="arm"; libfolder="lib";;
+  *armeabi*) arch="arm64"; libfolder="lib64";;
   *) arch="unknown";;
 esac
 
